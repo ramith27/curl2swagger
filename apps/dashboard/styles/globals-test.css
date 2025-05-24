@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Test styles */
+body {
+  background-color: red !important;
+}
+
+.test-class {
+  background-color: blue;
+  color: white;
+  padding: 20px;
+}

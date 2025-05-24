@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects Project[]
+
+  @@map("users")
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  captures  Capture[]
+  specFiles SpecFile[]
+
+  @@map("projects")
+}
+
+model Capture {
+  id        String   @id @default(cuid())
+  rawCurl   String
+  method    String
+  url       String
+  headers   Json?
+  body      String?
+  parsed    Json
+  createdAt DateTime @default(now())
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("captures")
+}
+
+model SpecFile {
+  id          String    @id @default(cuid())
+  filename    String
+  content     String
+  version     String
+  status      String    @default("DRAFT") // DRAFT, GENERATED, VALIDATED, INVALID
+  isActive    Boolean   @default(false)
+  lintResults Json?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  qualityReports QualityReport[]
+
+  @@map("spec_files")
+}
+
+model QualityReport {
+  id               String   @id @default(cuid())
+  overallScore     Float
+  lintingScore     Float
+  securityScore    Float
+  performanceScore Float
+  report           Json
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  specId    String
+  specFile  SpecFile @relation(fields: [specId], references: [id], onDelete: Cascade)
+  
+  projectId String
+
+  @@map("quality_reports")
+}

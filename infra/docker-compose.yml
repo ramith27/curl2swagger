@@ -1,0 +1,79 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: curl2swagger-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: curl2s
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: curl2swagger
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U curl2s -d curl2swagger"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: curl2swagger-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Uncomment when ready to run the full stack
+  # backend:
+  #   build:
+  #     context: ../
+  #     dockerfile: apps/backend/Dockerfile
+  #   container_name: curl2swagger-backend
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3001:3001"
+  #   environment:
+  #     DATABASE_URL: postgresql://curl2s:pass@postgres:5432/curl2swagger
+  #     REDIS_URL: redis://redis:6379
+  #     JWT_SECRET: your-super-secret-jwt-key
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+
+  # dashboard:
+  #   build:
+  #     context: ../
+  #     dockerfile: apps/dashboard/Dockerfile
+  #   container_name: curl2swagger-dashboard
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     BACKEND_URL: http://backend:3001
+  #     NEXTAUTH_URL: http://localhost:3000
+  #     NEXTAUTH_SECRET: your-nextauth-secret
+  #   depends_on:
+  #     - backend
+
+volumes:
+  pg_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  default:
+    name: curl2swagger-network

@@ -1,0 +1,43 @@
+
+> @curl2swagger/backend@1.0.0 lint /Volumes/Data/Ramith/Projects/curl2swagger/apps/backend
+> eslint "{src,apps,libs,test}/**/*.ts" --fix
+
+=============
+
+WARNING: You are currently running a version of TypeScript which is not officially supported by @typescript-eslint/typescript-estree.
+
+You may find that it works just fine, or you may not.
+
+SUPPORTED TYPESCRIPT VERSIONS: >=4.3.5 <5.4.0
+
+YOUR TYPESCRIPT VERSION: 5.8.3
+
+Please only submit bug reports when using the officially supported version.
+
+=============
+[0m[0m
+[0m[4m/Volumes/Data/Ramith/Projects/curl2swagger/apps/backend/src/auth/auth.controller.ts[24m[0m
+[0m  [2m1:34[22m  [33mwarning[39m  'UseGuards' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Volumes/Data/Ramith/Projects/curl2swagger/apps/backend/src/auth/auth.service.ts[24m[0m
+[0m  [2m19:25[22m  [33mwarning[39m  '_' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m59:23[22m  [33mwarning[39m  '_' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Volumes/Data/Ramith/Projects/curl2swagger/apps/backend/src/capture/capture.controller.ts[24m[0m
+[0m  [2m26:72[22m  [33mwarning[39m  'user' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Volumes/Data/Ramith/Projects/curl2swagger/apps/backend/src/quality/quality.controller.ts[24m[0m
+[0m  [2m54:80[22m  [33mwarning[39m  'user' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Volumes/Data/Ramith/Projects/curl2swagger/apps/backend/src/queue/queue.service.ts[24m[0m
+[0m  [2m254:38[22m  [33mwarning[39m  'specContent' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Volumes/Data/Ramith/Projects/curl2swagger/apps/backend/src/spec/spec.controller.ts[24m[0m
+[0m  [2m61:44[22m  [33mwarning[39m  'projectId' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Volumes/Data/Ramith/Projects/curl2swagger/apps/backend/src/spec/spec.service.ts[24m[0m
+[0m  [2m274:32[22m  [33mwarning[39m  'captures' is defined but never used     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m423:22[22m  [33mwarning[39m  'specContent' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[33m[1m✖ 9 problems (0 errors, 9 warnings)[22m[39m[0m
+[0m[33m[1m[22m[39m[0m

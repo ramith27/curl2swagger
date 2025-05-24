@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: curl2swagger-postgres
+    environment:
+      POSTGRES_DB: curl2swagger
+      POSTGRES_USER: curl2swagger
+      POSTGRES_PASSWORD: password123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./apps/backend/prisma/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U curl2swagger -d curl2swagger"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: curl2swagger-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: curl2swagger-backend
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: postgresql://curl2swagger:password123@postgres:5432/curl2swagger
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+      NODE_ENV: development
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./apps/backend:/app/apps/backend
+      - ./packages:/app/packages
+      - /app/node_modules
+      - /app/apps/backend/node_modules
+    working_dir: /app/apps/backend
+    command: pnpm run dev
+    develop:
+      watch:
+        - action: rebuild
+          path: ./apps/backend
+          target: /app/apps/backend
+        - action: rebuild
+          path: ./packages
+          target: /app/packages
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: apps/dashboard/Dockerfile
+    container_name: curl2swagger-dashboard
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+      NODE_ENV: development
+    depends_on:
+      - backend
+    volumes:
+      - ./apps/dashboard:/app/apps/dashboard
+      - ./packages:/app/packages
+      - /app/node_modules
+      - /app/apps/dashboard/node_modules
+    working_dir: /app/apps/dashboard
+    command: pnpm run dev
+    develop:
+      watch:
+        - action: rebuild
+          path: ./apps/dashboard
+          target: /app/apps/dashboard
+        - action: rebuild
+          path: ./packages
+          target: /app/packages
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  default:
+    name: curl2swagger-network

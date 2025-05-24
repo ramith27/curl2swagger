@@ -1,0 +1,20 @@
+{
+  "name": "@curl2swagger/parser",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "curlconverter": "^4.8.0",
+    "@curl2swagger/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "eslint": "^8.51.0",
+    "vitest": "^0.34.6"
+  }
+}

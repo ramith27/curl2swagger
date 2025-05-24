@@ -1,0 +1,19 @@
+{
+  "name": "@curl2swagger/shared",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "eslint": "^8.51.0",
+    "vitest": "^0.34.6"
+  }
+}

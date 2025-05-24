@@ -1,0 +1,36 @@
+{
+  "name": "curl2swagger",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "build:backend": "turbo run build --filter=backend",
+    "build:dashboard": "turbo run build --filter=dashboard",
+    "start:backend": "turbo run start --filter=backend",
+    "start:dashboard": "turbo run start --filter=dashboard",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "db:push": "prisma db push --schema apps/backend/prisma/schema.prisma",
+    "db:migrate": "cd apps/backend && prisma migrate dev",
+    "db:deploy": "cd apps/backend && prisma migrate deploy",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "spec": "curl http://localhost:3001/api/spec/latest -o openapi.yaml && redocly build openapi.yaml -o docs"
+  },
+  "devDependencies": {
+    "@turbo/gen": "^1.10.12",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.51.0",
+    "prettier": "^3.0.3",
+    "turbo": "^1.10.12",
+    "typescript": "^5.2.2"
+  },
+  "packageManager": "pnpm@8.6.10"
+}
