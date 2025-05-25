@@ -21,7 +21,12 @@
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:build": "docker-compose build",
-    "spec": "curl http://localhost:3001/api/spec/latest -o openapi.yaml && redocly build openapi.yaml -o docs"
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up --build",
+    "docker:dev:down": "docker-compose -f docker-compose.dev.yml down",
+    "docker:prod": "docker-compose up --build -d",
+    "docker:logs": "docker-compose logs -f",
+    "docker:clean": "docker-compose down -v && docker system prune -f",
+    "spec": "curl http://localhost:3003/api/spec/latest -o openapi.yaml && redocly build openapi.yaml -o docs"
   },
   "devDependencies": {
     "@turbo/gen": "^1.10.12",

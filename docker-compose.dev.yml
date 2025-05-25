@@ -1,0 +1,107 @@
+# Docker Compose for Development
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: curl2swagger-postgres-dev
+    environment:
+      POSTGRES_DB: curl2swagger_dev
+      POSTGRES_USER: curl2swagger
+      POSTGRES_PASSWORD: password123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./apps/backend/prisma/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U curl2swagger -d curl2swagger_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: curl2swagger-redis-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_dev_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+      target: base
+    container_name: curl2swagger-backend-dev
+    ports:
+      - "3003:3003"
+    environment:
+      DATABASE_URL: postgresql://curl2swagger:password123@postgres:5432/curl2swagger_dev
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: development-jwt-secret-key
+      NODE_ENV: development
+      BACKEND_PORT: 3003
+      FRONTEND_URL: http://localhost:3002
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./apps/backend:/app/apps/backend
+      - ./packages:/app/packages
+      - /app/node_modules
+      - /app/apps/backend/node_modules
+    working_dir: /app/apps/backend
+    command: pnpm run dev
+    develop:
+      watch:
+        - action: rebuild
+          path: ./apps/backend/src
+          target: /app/apps/backend/src
+        - action: rebuild
+          path: ./packages
+          target: /app/packages
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: apps/dashboard/Dockerfile
+      target: base
+    container_name: curl2swagger-dashboard-dev
+    ports:
+      - "3002:3002"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3003
+      NODE_ENV: development
+      PORT: 3002
+    depends_on:
+      - backend
+    volumes:
+      - ./apps/dashboard:/app/apps/dashboard
+      - ./packages:/app/packages
+      - /app/node_modules
+      - /app/apps/dashboard/node_modules
+    working_dir: /app/apps/dashboard
+    command: pnpm run dev -- --port 3002
+    develop:
+      watch:
+        - action: rebuild
+          path: ./apps/dashboard
+          target: /app/apps/dashboard
+        - action: rebuild
+          path: ./packages
+          target: /app/packages
+
+volumes:
+  postgres_dev_data:
+  redis_dev_data:
+
+networks:
+  default:
+    name: curl2swagger-dev-network
