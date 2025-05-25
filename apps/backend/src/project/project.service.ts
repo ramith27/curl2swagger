@@ -47,12 +47,31 @@ export class ProjectService {
       throw new Error('Project not found');
     }
 
+    const activeSpec = project.specFiles.find(spec => spec.isActive);
+    
     return {
       id: project.id,
       name: project.name,
       description: project.description,
       createdAt: project.createdAt.toISOString(),
-      captures: project.captures,
+      captures: project.captures.map(capture => ({
+        id: capture.id,
+        method: capture.method,
+        url: capture.url,
+        headers: capture.headers || {},
+        body: capture.body,
+        createdAt: capture.createdAt.toISOString(),
+      })),
+      activeSpec: activeSpec ? {
+        id: activeSpec.id,
+        filename: activeSpec.filename,
+        content: activeSpec.content,
+        version: activeSpec.version,
+        status: activeSpec.isActive ? 'active' : 'inactive',
+        createdAt: activeSpec.createdAt.toISOString(),
+        updatedAt: activeSpec.updatedAt.toISOString(),
+      } : null,
+      qualityReport: null, // TODO: Fix quality report integration
       specFiles: project.specFiles,
     };
   }

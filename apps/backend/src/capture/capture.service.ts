@@ -21,7 +21,7 @@ export class CaptureService {
           method: parsed.method,
           url: parsed.url,
           headers: parsed.headers || {},
-          body: parsed.body,
+          body: parsed.body ? (typeof parsed.body === 'string' ? parsed.body : JSON.stringify(parsed.body)) : null,
           parsed: parsed as any, // Cast to avoid Prisma JSON type issues
           projectId: projectId || null,
         }

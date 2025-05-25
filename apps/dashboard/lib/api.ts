@@ -100,7 +100,7 @@ export interface PerformanceIssue {
 
 export interface CreateProjectRequest {
   name: string
-  description: string
+  description?: string
 }
 
 class ApiClient {
@@ -221,10 +221,10 @@ class ApiClient {
     return this.request<Capture[]>(`/captures/project/${projectId}`)
   }
 
-  async convertCurl(curlCommand: string): Promise<Capture> {
+  async convertCurl(curlCommand: string, projectId?: string): Promise<Capture> {
     return this.request<Capture>('/captures/convert', {
       method: 'POST',
-      body: JSON.stringify({ curlCommand }),
+      body: JSON.stringify({ rawCurl: curlCommand, projectId }),
     })
   }
 

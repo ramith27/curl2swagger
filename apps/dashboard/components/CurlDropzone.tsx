@@ -18,7 +18,7 @@ export function CurlDropzone({ projectId, onSuccess }: CurlDropzoneProps) {
   const queryClient = useQueryClient()
 
   const convertMutation = useMutation({
-    mutationFn: (curl: string) => apiClient.convertCurl(curl),
+    mutationFn: (curl: string) => apiClient.convertCurl(curl, projectId),
     onSuccess: () => {
       setCurlCommand('')
       queryClient.invalidateQueries({ queryKey: ['project', projectId] })
