@@ -27,20 +27,27 @@ COPY apps/backend/prisma ./apps/backend/prisma/
 # Install dependencies
 RUN pnpm install --frozen-lockfile
 
+# Copy root configuration files
+COPY .eslintrc.cjs ./
+COPY tsconfig.base.json ./
+COPY turbo.json ./
+
 # Copy source code
 COPY apps/backend/src ./apps/backend/src
 COPY apps/backend/tsconfig.json ./apps/backend/
 COPY apps/backend/nest-cli.json ./apps/backend/
-COPY tsconfig.base.json ./
-COPY turbo.json ./
+COPY apps/backend/.eslintrc.cjs ./apps/backend/
 
-# Copy package source files
+# Copy package source files and configs
 COPY packages/shared/src ./packages/shared/src
 COPY packages/shared/tsconfig.json ./packages/shared/
+COPY packages/shared/.eslintrc.cjs ./packages/shared/
 COPY packages/parser/src ./packages/parser/src
 COPY packages/parser/tsconfig.json ./packages/parser/
+COPY packages/parser/.eslintrc.cjs ./packages/parser/
 COPY packages/infer/src ./packages/infer/src
 COPY packages/infer/tsconfig.json ./packages/infer/
+COPY packages/infer/.eslintrc.cjs ./packages/infer/
 
 # Generate Prisma client
 RUN cd apps/backend && pnpm exec prisma generate
