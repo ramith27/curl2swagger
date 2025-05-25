@@ -1,8 +1,14 @@
 # Backend Dockerfile
-FROM node:18-alpine AS base
+FROM node:18-slim AS base
 
-# Install system dependencies needed for native module compilation
-RUN apk add --no-cache python3 make g++
+# Install system dependencies needed for native module compilation and Prisma
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    openssl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install pnpm
 RUN npm install -g pnpm@9.15.4
@@ -34,10 +40,17 @@ RUN cd apps/backend && pnpm exec prisma generate
 RUN cd apps/backend && pnpm run build
 
 # Production stage
-FROM node:18-alpine AS production
+FROM node:18-slim AS production
 
-# Install system dependencies needed for native module compilation (required for tree-sitter)
-RUN apk add --no-cache python3 make g++
+# Install system dependencies needed for native module compilation and Prisma
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    postgresql-client \
+    openssl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g pnpm@9.15.4
 
@@ -67,8 +80,7 @@ RUN chmod +x ./apps/backend/start.sh
 RUN cd apps/backend && pnpm exec prisma generate
 
 # Create non-root user for security
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nest -u 1001
+RUN groupadd -r nodejs && useradd -r -g nodejs nest
 
 # Change ownership to nest user
 RUN chown -R nest:nodejs /app
