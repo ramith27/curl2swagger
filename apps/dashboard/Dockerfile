@@ -15,28 +15,24 @@ COPY packages/ ./packages/
 COPY turbo.json ./
 COPY tsconfig.base.json ./
 
-# Install dependencies with proper workspace linking
-RUN pnpm install --frozen-lockfile
-
-# Copy source code after dependencies are installed
+# Copy source code before installing dependencies
 COPY apps/dashboard ./apps/dashboard
 
-# Install dependencies specifically for dashboard with node-linker=hoisted disabled
-RUN echo "=== Setting up .npmrc to prevent hoisting ==="
-RUN echo "node-linker=isolated" > /app/.npmrc
-RUN echo "shamefully-hoist=false" >> /app/.npmrc
+# Configure pnpm to not hoist dependencies
+RUN echo "shamefully-hoist=false" > /app/.npmrc
+RUN echo "node-linker=isolated" >> /app/.npmrc
 
-# Reinstall dependencies with isolated node-linker
-RUN echo "=== Reinstalling with isolated node-linker ==="
+# Install dependencies with the new configuration
 RUN pnpm install --frozen-lockfile
 
-# Alternative: Install Next.js directly in dashboard if still not found
-RUN echo "=== Installing Next.js directly in dashboard if needed ==="
-RUN cd /app/apps/dashboard && pnpm install next@14.0.3 --save-exact
+# Debug: Check if Next.js is properly installed
+RUN echo "=== Checking Next.js installation ==="
+RUN ls -la /app/apps/dashboard/node_modules/.bin/ | grep next || echo "Next.js not found in dashboard node_modules"
+RUN find /app -name "next" -type d | head -5
 
-# Build the dashboard
-RUN echo "=== Building dashboard ==="
-RUN cd /app/apps/dashboard && pnpm build
+# Build the dashboard using npx instead of pnpm to bypass workspace issues
+RUN echo "=== Building dashboard with npx ==="
+RUN cd /app/apps/dashboard && npx next build
 
 # Production stage
 FROM node:18-alpine AS runner
