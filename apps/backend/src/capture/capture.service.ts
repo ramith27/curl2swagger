@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
-import { CurlParser } from '@curl2swagger/parser';
+import { CurlParser } from '../shared';
 
 @Injectable()
 export class CaptureService {

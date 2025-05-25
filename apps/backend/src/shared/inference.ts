@@ -1,3 +1,4 @@
+// Schema inference utilities for generating OpenAPI schemas
 import { quicktype, InputData, jsonInputForTargetLanguage } from 'quicktype-core';
 
 export interface SchemaInferenceOptions {

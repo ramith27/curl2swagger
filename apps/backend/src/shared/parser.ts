@@ -1,4 +1,5 @@
-export interface Capture {
+// Parser utilities for cURL commands
+export interface CaptureData {
   url: string;
   method: string;
   headers?: Record<string, string>;
@@ -85,9 +86,9 @@ export class CurlParser {
     }
   }
 
-  static extractExamples(captures: Capture[]) {
+  static extractExamples(captures: CaptureData[]) {
     // Group captures by endpoint pattern
-    const endpoints = new Map<string, Capture[]>();
+    const endpoints = new Map<string, CaptureData[]>();
 
     captures.forEach(capture => {
       const pattern = this.generateEndpointPattern(capture.url, capture.method);

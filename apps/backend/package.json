@@ -21,9 +21,6 @@
     "db:setup": "prisma generate && prisma migrate deploy"
   },
   "dependencies": {
-    "@curl2swagger/infer": "workspace:*",
-    "@curl2swagger/parser": "workspace:*",
-    "@curl2swagger/shared": "workspace:*",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^10.0.0",
@@ -44,10 +41,12 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "prisma": "^5.5.2",
+    "quicktype-core": "^23.0.75",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "socket.io": "^4.7.2",
-    "yaml": "^2.3.4"
+    "yaml": "^2.3.4",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

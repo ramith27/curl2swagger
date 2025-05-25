@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
-import { SchemaInference } from '@curl2swagger/infer';
+import { SchemaInference } from '../shared';
 import * as YAML from 'yaml';
 
 interface OpenAPISpec {

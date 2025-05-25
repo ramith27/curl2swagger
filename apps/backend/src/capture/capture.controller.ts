@@ -4,8 +4,9 @@ import { IsString } from 'class-validator';
 import { CaptureService } from './capture.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
+import { ConvertCurlDto } from '../shared/index.js';
 
-class ConvertCurlDto {
+class ConvertCurlDtoValidated {
   @IsString()
   rawCurl: string;
 
@@ -23,7 +24,7 @@ export class CaptureController {
   @Post('convert')
   @ApiOperation({ summary: 'Convert cURL command to structured data' })
   @ApiResponse({ status: 201, description: 'cURL converted successfully' })
-  async convertCurl(@Body() convertDto: ConvertCurlDto, @CurrentUser() user: any) {
+  async convertCurl(@Body() convertDto: ConvertCurlDtoValidated, @CurrentUser() user: any) {
     return this.captureService.parseCurl(convertDto.rawCurl, convertDto.projectId);
   }
 

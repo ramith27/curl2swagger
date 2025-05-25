@@ -4,8 +4,9 @@ import { IsString } from 'class-validator';
 import { ProjectService } from './project.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
+import { CreateProjectDto } from '../shared/index.js';
 
-class CreateProjectDto {
+class CreateProjectDtoValidated {
   @IsString()
   name: string;
 
@@ -29,7 +30,7 @@ export class ProjectController {
   @Post()
   @ApiOperation({ summary: 'Create new project' })
   @ApiResponse({ status: 201, description: 'Project created successfully' })
-  async createProject(@Body() createDto: CreateProjectDto, @CurrentUser() user: any) {
+  async createProject(@Body() createDto: CreateProjectDtoValidated, @CurrentUser() user: any) {
     return this.projectService.create(user.id, createDto);
   }
 

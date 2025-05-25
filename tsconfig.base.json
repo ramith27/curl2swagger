@@ -21,10 +21,7 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@curl2swagger/shared": ["packages/shared/src"],
-      "@curl2swagger/parser": ["packages/parser/src"],
-      "@curl2swagger/infer": ["packages/infer/src"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],

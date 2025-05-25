@@ -32,15 +32,6 @@ importers:
 
   apps/backend:
     dependencies:
-      '@curl2swagger/infer':
-        specifier: workspace:*
-        version: link:../../packages/infer
-      '@curl2swagger/parser':
-        specifier: workspace:*
-        version: link:../../packages/parser
-      '@curl2swagger/shared':
-        specifier: workspace:*
-        version: link:../../packages/shared
       '@nestjs/common':
         specifier: ^10.0.0
         version: 10.4.17(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2)
@@ -101,6 +92,9 @@ importers:
       prisma:
         specifier: ^5.5.2
         version: 5.22.0
+      quicktype-core:
+        specifier: ^23.0.75
+        version: 23.2.5
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.14
@@ -113,6 +107,9 @@ importers:
       yaml:
         specifier: ^2.3.4
         version: 2.8.0
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.28
     devDependencies:
       '@nestjs/cli':
         specifier: ^10.0.0
@@ -177,9 +174,6 @@ importers:
 
   apps/dashboard:
     dependencies:
-      '@curl2swagger/shared':
-        specifier: workspace:*
-        version: link:../../packages/shared
       '@headlessui/react':
         specifier: ^1.7.17
         version: 1.7.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -295,9 +289,6 @@ importers:
 
   packages/infer:
     dependencies:
-      '@curl2swagger/shared':
-        specifier: workspace:*
-        version: link:../shared
       quicktype-core:
         specifier: ^23.0.75
         version: 23.2.5
@@ -314,9 +305,6 @@ importers:
 
   packages/parser:
     dependencies:
-      '@curl2swagger/shared':
-        specifier: workspace:*
-        version: link:../shared
       curlconverter:
         specifier: ^4.8.0
         version: 4.12.0
@@ -324,22 +312,6 @@ importers:
       '@types/node':
         specifier: ^20.0.0
         version: 20.17.50
-      eslint:
-        specifier: ^8.51.0
-        version: 8.57.1
-      typescript:
-        specifier: ^5.2.2
-        version: 5.8.3
-      vitest:
-        specifier: ^0.34.6
-        version: 0.34.6(terser@5.39.2)
-
-  packages/shared:
-    dependencies:
-      zod:
-        specifier: ^3.22.4
-        version: 3.25.28
-    devDependencies:
       eslint:
         specifier: ^8.51.0
         version: 8.57.1

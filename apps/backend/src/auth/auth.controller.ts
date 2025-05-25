@@ -4,8 +4,10 @@ import { AuthService } from './auth.service';
 import { IsEmail, IsString, MinLength } from 'class-validator';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { CurrentUser } from './current-user.decorator';
+import { LoginDto, RegisterDto } from '../shared/index.js';
 
-class LoginDto {
+// Keep the class-validator decorators for NestJS validation
+class LoginDtoValidated {
   @IsEmail()
   email: string;
 
@@ -14,7 +16,7 @@ class LoginDto {
   password: string;
 }
 
-class RegisterDto extends LoginDto {
+class RegisterDtoValidated extends LoginDtoValidated {
   @IsString()
   name: string;
 }
@@ -28,7 +30,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Login user' })
   @ApiResponse({ status: 200, description: 'Login successful' })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
-  async login(@Body() loginDto: LoginDto) {
+  async login(@Body() loginDto: LoginDtoValidated) {
     const user = await this.authService.validateUser(loginDto.email, loginDto.password);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
@@ -40,7 +42,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Register new user' })
   @ApiResponse({ status: 201, description: 'User created successfully' })
   @ApiResponse({ status: 409, description: 'User already exists' })
-  async register(@Body() registerDto: RegisterDto) {
+  async register(@Body() registerDto: RegisterDtoValidated) {
     return this.authService.register(registerDto);
   }
 
