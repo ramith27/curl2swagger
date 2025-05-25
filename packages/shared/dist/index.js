@@ -1,83 +1,87 @@
-import { z } from 'zod';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.QualityReportSchema = exports.RegisterDto = exports.LoginDto = exports.ConvertCurlDto = exports.CreateProjectDto = exports.SpecFileSchema = exports.CaptureSchema = exports.ProjectSchema = exports.UserSchema = void 0;
+const zod_1 = require("zod");
 // User schemas
-export const UserSchema = z.object({
-    id: z.string(),
-    email: z.string().email(),
-    name: z.string().optional(),
-    createdAt: z.string().datetime(),
-    updatedAt: z.string().datetime(),
+exports.UserSchema = zod_1.z.object({
+    id: zod_1.z.string(),
+    email: zod_1.z.string().email(),
+    name: zod_1.z.string().optional(),
+    createdAt: zod_1.z.string().datetime(),
+    updatedAt: zod_1.z.string().datetime(),
 });
 // Project schemas
-export const ProjectSchema = z.object({
-    id: z.string(),
-    name: z.string().min(1),
-    description: z.string().optional(),
-    userId: z.string(),
-    createdAt: z.string().datetime(),
-    updatedAt: z.string().datetime(),
+exports.ProjectSchema = zod_1.z.object({
+    id: zod_1.z.string(),
+    name: zod_1.z.string().min(1),
+    description: zod_1.z.string().optional(),
+    userId: zod_1.z.string(),
+    createdAt: zod_1.z.string().datetime(),
+    updatedAt: zod_1.z.string().datetime(),
 });
 // Capture schemas
-export const CaptureSchema = z.object({
-    id: z.string(),
-    rawCurl: z.string().min(1),
-    method: z.string(),
-    url: z.string().url(),
-    headers: z.record(z.string()).optional(),
-    body: z.string().optional(),
-    parsed: z.any(),
-    projectId: z.string(),
-    createdAt: z.string().datetime(),
+exports.CaptureSchema = zod_1.z.object({
+    id: zod_1.z.string(),
+    rawCurl: zod_1.z.string().min(1),
+    method: zod_1.z.string(),
+    url: zod_1.z.string().url(),
+    headers: zod_1.z.record(zod_1.z.string()).optional(),
+    body: zod_1.z.string().optional(),
+    parsed: zod_1.z.any(),
+    projectId: zod_1.z.string(),
+    createdAt: zod_1.z.string().datetime(),
 });
 // Spec file schemas
-export const SpecFileSchema = z.object({
-    id: z.string(),
-    filename: z.string(),
-    content: z.string(),
-    version: z.string(),
-    isActive: z.boolean(),
-    lintResults: z.any().optional(),
-    projectId: z.string(),
-    createdAt: z.string().datetime(),
-    updatedAt: z.string().datetime(),
+exports.SpecFileSchema = zod_1.z.object({
+    id: zod_1.z.string(),
+    filename: zod_1.z.string(),
+    content: zod_1.z.string(),
+    version: zod_1.z.string(),
+    isActive: zod_1.z.boolean(),
+    lintResults: zod_1.z.any().optional(),
+    projectId: zod_1.z.string(),
+    createdAt: zod_1.z.string().datetime(),
+    updatedAt: zod_1.z.string().datetime(),
 });
 // API DTOs
-export const CreateProjectDto = z.object({
-    name: z.string().min(1),
-    description: z.string().optional(),
+exports.CreateProjectDto = zod_1.z.object({
+    name: zod_1.z.string().min(1),
+    description: zod_1.z.string().optional(),
 });
-export const ConvertCurlDto = z.object({
-    rawCurl: z.string().min(1),
-    projectId: z.string().optional(),
+exports.ConvertCurlDto = zod_1.z.object({
+    rawCurl: zod_1.z.string().min(1),
+    projectId: zod_1.z.string().optional(),
 });
-export const LoginDto = z.object({
-    email: z.string().email(),
-    password: z.string().min(6),
+exports.LoginDto = zod_1.z.object({
+    email: zod_1.z.string().email(),
+    password: zod_1.z.string().min(6),
 });
-export const RegisterDto = LoginDto.extend({
-    name: z.string().min(1),
+exports.RegisterDto = exports.LoginDto.extend({
+    name: zod_1.z.string().min(1),
 });
 // Quality report schemas
-export const QualityReportSchema = z.object({
-    overall: z.number().min(0).max(100),
-    lint: z.object({
-        score: z.number().min(0).max(100),
-        issues: z.array(z.object({
-            severity: z.enum(['error', 'warning', 'info']),
-            message: z.string(),
-            path: z.string(),
-            line: z.number().optional(),
+exports.QualityReportSchema = zod_1.z.object({
+    overall: zod_1.z.number().min(0).max(100),
+    lint: zod_1.z.object({
+        score: zod_1.z.number().min(0).max(100),
+        issues: zod_1.z.array(zod_1.z.object({
+            severity: zod_1.z.enum(['error', 'warning', 'info']),
+            message: zod_1.z.string(),
+            path: zod_1.z.string(),
+            line: zod_1.z.number().optional(),
         })),
-        suggestions: z.array(z.string()),
+        suggestions: zod_1.z.array(zod_1.z.string()),
     }),
-    security: z.object({
-        securityScore: z.number().min(0).max(100),
-        vulnerabilities: z.array(z.any()),
-        recommendations: z.array(z.string()),
+    security: zod_1.z.object({
+        securityScore: zod_1.z.number().min(0).max(100),
+        vulnerabilities: zod_1.z.array(zod_1.z.any()),
+        recommendations: zod_1.z.array(zod_1.z.string()),
     }),
-    performance: z.object({
-        performanceScore: z.number().min(0).max(100),
-        issues: z.array(z.string()),
-        recommendations: z.array(z.string()),
+    performance: zod_1.z.object({
+        performanceScore: zod_1.z.number().min(0).max(100),
+        issues: zod_1.z.array(zod_1.z.string()),
+        recommendations: zod_1.z.array(zod_1.z.string()),
     }),
-    timestamp: z.string().datetime(),
+    timestamp: zod_1.z.string().datetime(),
 });
+//# sourceMappingURL=index.js.map

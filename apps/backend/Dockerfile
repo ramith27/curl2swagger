@@ -33,6 +33,19 @@ COPY apps/backend/tsconfig.json ./apps/backend/
 COPY apps/backend/nest-cli.json ./apps/backend/
 COPY tsconfig.base.json ./
 
+# Copy package source files
+COPY packages/shared/src ./packages/shared/src
+COPY packages/shared/tsconfig.json ./packages/shared/
+COPY packages/parser/src ./packages/parser/src
+COPY packages/parser/tsconfig.json ./packages/parser/
+COPY packages/infer/src ./packages/infer/src
+COPY packages/infer/tsconfig.json ./packages/infer/
+
+# Build packages first (in dependency order)
+RUN cd packages/shared && pnpm run build
+RUN cd packages/parser && pnpm run build
+RUN cd packages/infer && pnpm run build
+
 # Generate Prisma client
 RUN cd apps/backend && pnpm exec prisma generate
 
@@ -71,6 +84,7 @@ RUN pnpm install --frozen-lockfile --prod
 COPY --from=base /app/apps/backend/dist ./apps/backend/dist
 COPY --from=base /app/apps/backend/prisma ./apps/backend/prisma
 COPY --from=base /app/packages ./packages
+COPY --from=base /app/tsconfig.base.json ./
 
 # Copy start script
 COPY apps/backend/start.sh ./apps/backend/start.sh
