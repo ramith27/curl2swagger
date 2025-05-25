@@ -21,17 +21,23 @@ RUN pnpm install --frozen-lockfile
 # Copy source code after dependencies are installed
 COPY apps/dashboard ./apps/dashboard
 
-# Debug: Check where Next.js is installed
+# Debug: Check where Next.js is installed and workspace structure
+RUN echo "=== Checking root node_modules ==="
 RUN ls -la /app/node_modules/ | grep next || echo "Next.js not in root node_modules"
+RUN echo "=== Checking dashboard directory ==="
 RUN ls -la /app/apps/dashboard/ || echo "Dashboard directory contents"
-RUN find /app -name "next" -type d 2>/dev/null | head -10 || echo "Could not find next directory"
+RUN echo "=== Looking for next executable ==="
 RUN find /app -name "next" -type f 2>/dev/null | head -5 || echo "Could not find next executable"
-
-# Try different approaches to run next build
-RUN echo "=== Checking pnpm version and config ==="
-RUN pnpm --version
-RUN echo "=== Checking workspace structure ==="
+RUN echo "=== Checking pnpm workspace ==="
 RUN pnpm list --depth=0 || echo "pnpm list failed"
+RUN echo "=== Trying to find next with which ==="
+RUN which next || echo "next not in PATH"
+RUN echo "=== Trying pnpm which next ==="
+RUN pnpm exec which next || echo "pnpm exec which next failed"
+
+# Try to build Next.js using the correct approach
+RUN echo "=== Attempting to run Next.js build ==="
+RUN cd /app && pnpm --filter=@curl2swagger/dashboard exec next build
 
 # Production stage
 FROM node:18-alpine AS runner
