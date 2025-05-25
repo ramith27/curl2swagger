@@ -2,9 +2,19 @@ import { Queue, Worker } from 'bullmq';
 import IORedis from 'ioredis';
 import { PrismaService } from '../src/database/prisma.service';
 
+// Parse Redis URL or use individual host/port
+let redisConfig: any;
+if (process.env.REDIS_URL) {
+  redisConfig = process.env.REDIS_URL;
+} else {
+  redisConfig = {
+    host: process.env.REDIS_HOST || 'redis',
+    port: parseInt(process.env.REDIS_PORT || '6379'),
+  };
+}
+
 const connection = new IORedis({
-  host: process.env.REDIS_HOST || 'localhost',
-  port: parseInt(process.env.REDIS_PORT || '6379'),
+  ...redisConfig,
   maxRetriesPerRequest: null,
 });
 

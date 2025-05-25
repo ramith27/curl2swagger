@@ -40,6 +40,8 @@ services:
     environment:
       DATABASE_URL: postgresql://curl2swagger:password123@postgres:5432/curl2swagger
       REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
       NODE_ENV: production
       BACKEND_PORT: 3003
