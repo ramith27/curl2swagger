@@ -10,9 +10,7 @@
     "lint": "eslint src --ext .ts",
     "test": "vitest"
   },
-  "dependencies": {
-    "curlconverter": "^4.8.0"
-  },
+
   "devDependencies": {
     "typescript": "^5.2.2",
     "eslint": "^8.51.0",

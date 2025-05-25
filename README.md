@@ -225,7 +225,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- [curlconverter](https://github.com/curlconverter/curlconverter) - cURL parsing
 - [quicktype](https://github.com/quicktype/quicktype) - JSON schema inference
 - [Spectral](https://github.com/stoplightio/spectral) - OpenAPI linting
 - [Redocly](https://redocly.com/) - API documentation tools
