@@ -21,8 +21,13 @@ RUN pnpm install --frozen-lockfile
 # Copy source code after dependencies are installed
 COPY apps/dashboard ./apps/dashboard
 
-# Build the dashboard using pnpm exec from workspace root
-RUN cd apps/dashboard && pnpm exec next build
+# Debug: Check where Next.js is installed
+RUN ls -la /app/node_modules/ | grep next || echo "Next.js not in root node_modules"
+RUN ls -la /app/apps/dashboard/ || echo "Dashboard directory contents"
+RUN find /app -name "next" -type d 2>/dev/null | head -10 || echo "Could not find next directory"
+
+# Try to build using pnpm exec from root with explicit path
+RUN pnpm exec --filter=@curl2swagger/dashboard next build
 
 # Production stage
 FROM node:18-alpine AS runner
