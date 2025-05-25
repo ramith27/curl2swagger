@@ -47,7 +47,6 @@ function ProjectDetailContent() {
     onSuccess: (data) => {
       console.log('Project data received:', data);
       console.log('Active spec:', data?.activeSpec);
-      console.log('Spec files:', data?.specFiles);
     }
   });
 
