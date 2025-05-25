@@ -25,9 +25,13 @@ COPY apps/dashboard ./apps/dashboard
 RUN ls -la /app/node_modules/ | grep next || echo "Next.js not in root node_modules"
 RUN ls -la /app/apps/dashboard/ || echo "Dashboard directory contents"
 RUN find /app -name "next" -type d 2>/dev/null | head -10 || echo "Could not find next directory"
+RUN find /app -name "next" -type f 2>/dev/null | head -5 || echo "Could not find next executable"
 
-# Try to build using pnpm exec from root with explicit path
-RUN pnpm exec --filter=@curl2swagger/dashboard next build
+# Try different approaches to run next build
+RUN echo "=== Checking pnpm version and config ==="
+RUN pnpm --version
+RUN echo "=== Checking workspace structure ==="
+RUN pnpm list --depth=0 || echo "pnpm list failed"
 
 # Production stage
 FROM node:18-alpine AS runner
