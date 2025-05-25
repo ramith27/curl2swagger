@@ -1,10 +1,12 @@
 {
   "name": "@curl2swagger/parser",
   "version": "1.0.0",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "clean": "rm -rf dist",
+    "prepublish": "npm run build",
     "lint": "eslint src --ext .ts",
     "test": "vitest"
   },
