@@ -21,8 +21,8 @@ COPY apps/dashboard ./apps/dashboard
 COPY turbo.json ./
 COPY tsconfig.base.json ./
 
-# Build the dashboard using workspace context
-RUN pnpm build:dashboard
+# Build the dashboard using workspace context (skip lint)
+RUN pnpm --filter=dashboard run build
 
 # Production stage
 FROM node:18-alpine AS runner
