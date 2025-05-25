@@ -4,7 +4,7 @@ set -e
 # Function to wait for database
 wait_for_db() {
   echo "Waiting for database to be ready..."
-  until pnpm exec prisma db push --skip-generate 2>/dev/null; do
+  until pg_isready -h postgres -p 5432 -U postgres 2>/dev/null; do
     echo "Database is not ready yet - waiting..."
     sleep 2
   done
@@ -13,6 +13,10 @@ wait_for_db() {
 
 # Wait for database connection
 wait_for_db
+
+# Generate Prisma client
+echo "Generating Prisma client..."
+pnpm exec prisma generate
 
 # Run database migrations
 echo "Running database migrations..."
