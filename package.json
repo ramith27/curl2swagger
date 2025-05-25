@@ -26,7 +26,7 @@
     "docker:prod": "docker-compose up --build -d",
     "docker:logs": "docker-compose logs -f",
     "docker:clean": "docker-compose down -v && docker system prune -f",
-    "spec": "curl http://localhost:3003/api/spec/latest -o openapi.yaml && redocly build openapi.yaml -o docs"
+    "spec": "curl ${NEXT_PUBLIC_API_URL:-http://localhost:3003}/api/spec/latest -o openapi.yaml && redocly build openapi.yaml -o docs"
   },
   "devDependencies": {
     "@turbo/gen": "^1.10.12",
