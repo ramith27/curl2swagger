@@ -12,7 +12,7 @@ export interface ParsedCurl {
     query?: Record<string, string>;
 }
 export declare class CurlParser {
-    static parse(rawCurl: string): ParsedCurl;
+    static parse(rawCurl: string): Promise<ParsedCurl>;
     static extractApiInfo(parsed: ParsedCurl): {
         baseUrl: string;
         path: string;
@@ -21,7 +21,7 @@ export declare class CurlParser {
         contentType: string;
     };
     private static extractPathParams;
-    static validateCurl(rawCurl: string): boolean;
+    static validateCurl(rawCurl: string): Promise<boolean>;
     static extractExamples(captures: Capture[]): Map<string, Capture[]>;
     private static generateEndpointPattern;
 }
