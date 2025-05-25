@@ -1,7 +1,5 @@
 'use client'
 
-// @ts-nocheck
-
 import React, { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Button } from '../../components/ui/button'
@@ -60,15 +58,15 @@ function ProjectsContent(): React.JSX.Element {
       )}
 
       {/* Error State */}
-      {error && (
+      {error ? (
         <div className="text-center py-12">
           <FileText className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
           <h3 className="text-lg font-medium mb-2">Error loading projects</h3>
           <p className="text-muted-foreground mb-4">
-            {error instanceof Error ? error.message : 'Something went wrong'}
+            {String(error instanceof Error ? error.message : 'Something went wrong')}
           </p>
         </div>
-      )}
+      ) : null}
 
       {/* Projects Grid */}
       {!isLoading && !error && (

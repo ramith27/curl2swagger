@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Button } from './ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Badge } from './ui/badge';
-import { Alert, AlertDescription } from './ui/alert';
+import { Alert } from './ui/alert';
 import { 
   Download, 
   Copy, 

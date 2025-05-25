@@ -81,12 +81,12 @@ export function CurlDropzone({ projectId, onSuccess }: CurlDropzoneProps) {
             )}
           </div>
 
-          {convertMutation.error && (
+          {convertMutation.error ? (
             <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-3 rounded-md">
               <AlertCircle className="h-4 w-4" />
-              <span>{(convertMutation.error as Error)?.message || 'An error occurred'}</span>
+              <span>{String((convertMutation.error as Error)?.message || 'An error occurred')}</span>
             </div>
-          )}
+          ) : null}
 
           {convertMutation.data && (
             <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 p-3 rounded-md">

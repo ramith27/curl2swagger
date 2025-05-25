@@ -15,7 +15,6 @@ import { apiClient } from '../../../lib/api';
 import { ProtectedRoute } from '../../../components/ProtectedRoute';
 import { 
   Search, 
-  Filter, 
   Download, 
   FileText, 
   AlertTriangle, 
@@ -52,13 +51,6 @@ function ProjectDetailContent() {
 
   const generateSpecMutation = useMutation({
     mutationFn: () => apiClient.generateSpec(projectId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['project', projectId] });
-    },
-  });
-
-  const convertCurlMutation = useMutation({
-    mutationFn: (curlCommand: string) => apiClient.convertCurl(curlCommand),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['project', projectId] });
     },

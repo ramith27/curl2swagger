@@ -52,21 +52,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [])
 
   const login = async (email: string, password: string) => {
-    try {
-      const response = await apiClient.login({ email, password })
-      setUser(response.user)
-    } catch (error) {
-      throw error
-    }
+    const response = await apiClient.login({ email, password })
+    setUser(response.user)
   }
 
   const register = async (email: string, password: string, name: string) => {
-    try {
-      const response = await apiClient.register({ email, password, name })
-      setUser(response.user)
-    } catch (error) {
-      throw error
-    }
+    const response = await apiClient.register({ email, password, name })
+    setUser(response.user)
   }
 
   const logout = () => {
