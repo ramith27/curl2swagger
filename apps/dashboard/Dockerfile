@@ -21,9 +21,8 @@ RUN pnpm install --frozen-lockfile
 # Copy source code after dependencies are installed
 COPY apps/dashboard ./apps/dashboard
 
-# Build the dashboard directly (bypass turbo lint dependency)
-WORKDIR /app/apps/dashboard
-RUN pnpm build
+# Build the dashboard using pnpm exec from workspace root
+RUN cd apps/dashboard && pnpm exec next build
 
 # Production stage
 FROM node:18-alpine AS runner
