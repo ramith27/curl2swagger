@@ -4,23 +4,25 @@ RUN apk add --no-cache libc6-compat python3 make g++
 RUN npm install -g pnpm@9.15.4
 WORKDIR /app
 
-# Install dependencies
-FROM base AS deps
+# Build stage
+FROM base AS builder
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/dashboard/package.json ./apps/dashboard/
 COPY packages/ ./packages/
-RUN pnpm install --frozen-lockfile --ignore-scripts
 
-# Build stage
-FROM base AS builder
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+# Install all dependencies (including devDependencies for build)
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
+COPY tsconfig.base.json ./
+COPY turbo.json ./
+COPY apps/dashboard/ ./apps/dashboard/
 
 # Build the dashboard application
-WORKDIR /app/apps/dashboard
+WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN pnpm run build
+RUN pnpm build:dashboard
 
 # Production stage
 FROM base AS runner
