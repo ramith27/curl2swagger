@@ -15,7 +15,9 @@
     "test:debug": "vitest --inspect-brk --inspect --logHeapUsage --run",
     "test:e2e": "vitest --config ./test/vitest-e2e.config.ts",
     "dev": "ts-node -r tsconfig-paths/register src/main.ts",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
+    "db:setup": "prisma generate && prisma migrate deploy"
   },
   "dependencies": {
     "@curl2swagger/infer": "workspace:*",
