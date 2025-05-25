@@ -2,3 +2,5 @@ node_modules/
 apps/dashboard/.next/
 apps/dashboard/.turbo/
 apps/dashboard/.cache/
+apps/backend/dist
+apps/backend/.turbo

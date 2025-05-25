@@ -44,7 +44,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
       NODE_ENV: production
       BACKEND_PORT: 3003
-      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3002}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
     depends_on:
       postgres:
         condition: service_healthy
@@ -56,14 +56,14 @@ services:
     build:
       context: .
       dockerfile: apps/dashboard/Dockerfile
-      target: production
+      target: runner
     container_name: curl2swagger-dashboard
     ports:
-      - "3002:3002"
+      - "3000:3000"
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3003}
       NODE_ENV: production
-      PORT: 3002
+      PORT: 3000
     depends_on:
       - backend
     restart: unless-stopped
