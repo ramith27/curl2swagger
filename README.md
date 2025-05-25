@@ -28,10 +28,9 @@ Transform your cURL commands into comprehensive OpenAPI specifications with AI-p
 - **TanStack Query** - Data fetching and caching
 - **Socket.IO** - Real-time communication
 
-### Packages
-- **@curl2swagger/parser** - cURL command parsing
-- **@curl2swagger/infer** - Schema inference using quicktype
-- **@curl2swagger/shared** - Shared types and utilities
+### Architecture
+- **Backend** - NestJS API with integrated utilities for cURL parsing, schema inference, and OpenAPI generation
+- **Dashboard** - Next.js frontend with real-time collaboration features
 
 ## 🚀 Quick Start
 
