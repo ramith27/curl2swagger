@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Install pnpm
-RUN npm install -g pnpm@9.15.4
+# Install pnpm and turbo
+RUN npm install -g pnpm@9.15.4 turbo
 
 # Set working directory
 WORKDIR /app
@@ -32,6 +32,7 @@ COPY apps/backend/src ./apps/backend/src
 COPY apps/backend/tsconfig.json ./apps/backend/
 COPY apps/backend/nest-cli.json ./apps/backend/
 COPY tsconfig.base.json ./
+COPY turbo.json ./
 
 # Copy package source files
 COPY packages/shared/src ./packages/shared/src
@@ -41,16 +42,11 @@ COPY packages/parser/tsconfig.json ./packages/parser/
 COPY packages/infer/src ./packages/infer/src
 COPY packages/infer/tsconfig.json ./packages/infer/
 
-# Build packages first (in dependency order)
-RUN cd packages/shared && pnpm run build
-RUN cd packages/parser && pnpm run build
-RUN cd packages/infer && pnpm run build
-
 # Generate Prisma client
 RUN cd apps/backend && pnpm exec prisma generate
 
-# Build the backend
-RUN cd apps/backend && pnpm run build
+# Build packages and backend using Turbo (handles dependencies automatically)
+RUN pnpm run build:backend
 
 # Production stage
 FROM node:18-slim AS production
