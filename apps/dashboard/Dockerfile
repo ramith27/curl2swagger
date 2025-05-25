@@ -21,18 +21,21 @@ RUN pnpm install --frozen-lockfile
 # Copy source code after dependencies are installed
 COPY apps/dashboard ./apps/dashboard
 
-# Force pnpm to install dependencies in each package's node_modules
-RUN echo "=== Installing dependencies with shamefully-hoist=false ==="
-RUN pnpm install --frozen-lockfile --shamefully-hoist=false
+# Install dependencies specifically for dashboard with node-linker=hoisted disabled
+RUN echo "=== Setting up .npmrc to prevent hoisting ==="
+RUN echo "node-linker=isolated" > /app/.npmrc
+RUN echo "shamefully-hoist=false" >> /app/.npmrc
 
-# Debug: Check where Next.js is now installed
-RUN echo "=== Checking dashboard node_modules ==="
-RUN ls -la /app/apps/dashboard/node_modules/ | grep next || echo "Next.js not in dashboard node_modules"
-RUN echo "=== Checking root node_modules ==="
-RUN ls -la /app/node_modules/ | grep next || echo "Next.js not in root node_modules"
+# Reinstall dependencies with isolated node-linker
+RUN echo "=== Reinstalling with isolated node-linker ==="
+RUN pnpm install --frozen-lockfile
 
-# Try to build Next.js using the correct approach
-RUN echo "=== Attempting to run Next.js build ==="
+# Alternative: Install Next.js directly in dashboard if still not found
+RUN echo "=== Installing Next.js directly in dashboard if needed ==="
+RUN cd /app/apps/dashboard && pnpm install next@14.0.3 --save-exact
+
+# Build the dashboard
+RUN echo "=== Building dashboard ==="
 RUN cd /app/apps/dashboard && pnpm build
 
 # Production stage
