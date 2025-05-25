@@ -1,57 +1,57 @@
-# Base stage for dependencies
+# Dashboard Dockerfile
 FROM node:18-alpine AS base
-RUN apk add --no-cache libc6-compat python3 make g++
+
+# Install pnpm
 RUN npm install -g pnpm@9.15.4
+
+# Set working directory
 WORKDIR /app
 
-# Build stage
-FROM base AS builder
+# Copy package files for better layer caching
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/dashboard/package.json ./apps/dashboard/
 COPY packages/ ./packages/
 
-# Install all dependencies (including devDependencies for build)
+# Install dependencies
 RUN pnpm install --frozen-lockfile
 
 # Copy source code
+COPY apps/dashboard ./apps/dashboard
 COPY tsconfig.base.json ./
-COPY turbo.json ./
-COPY apps/dashboard/ ./apps/dashboard/
 
-# Build the dashboard application
-WORKDIR /app
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-RUN pnpm build:dashboard
+# Build the dashboard
+RUN cd apps/dashboard && pnpm run build
 
 # Production stage
-FROM base AS runner
+FROM node:18-alpine AS production
+
+RUN npm install -g pnpm@9.15.4
+
 WORKDIR /app
 
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/dashboard/package.json ./apps/dashboard/
+COPY packages/ ./packages/
+
+# Install production dependencies only
+RUN pnpm install --frozen-lockfile --prod
+
+# Copy built application
+COPY --from=base /app/apps/dashboard/.next ./apps/dashboard/.next
+COPY --from=base /app/apps/dashboard/public ./apps/dashboard/public
+COPY --from=base /app/apps/dashboard/package.json ./apps/dashboard/
+COPY --from=base /app/packages ./packages
 
 # Create non-root user for security
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
 
-# Copy the built application from standalone output
-COPY --from=builder /app/apps/dashboard/public ./public
-
-# Set correct permissions for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-# Copy standalone output
-COPY --from=builder --chown=nextjs:nodejs /app/apps/dashboard/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/dashboard/.next/static ./.next/static
+# Change ownership to nextjs user
+RUN chown -R nextjs:nodejs /app
 
 USER nextjs
 
-EXPOSE 3000
+EXPOSE 3002
 
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
-
-# Use the server.js from standalone build
-CMD ["node", "server.js"]
+CMD ["pnpm", "run", "start", "--filter=dashboard"]
