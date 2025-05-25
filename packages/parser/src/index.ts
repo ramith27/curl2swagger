@@ -1,5 +1,3 @@
-import * as curlconverter from 'curlconverter';
-
 export interface Capture {
   url: string;
   method: string;
@@ -18,6 +16,9 @@ export interface ParsedCurl {
 export class CurlParser {
   static parse(rawCurl: string): ParsedCurl {
     try {
+      // Use require to load curlconverter for CommonJS compatibility
+      const curlconverter = require('curlconverter');
+      
       // Use curlconverter to parse the cURL command
       const jsonString = curlconverter.toJsonString(rawCurl);
       const parsed = JSON.parse(jsonString);
