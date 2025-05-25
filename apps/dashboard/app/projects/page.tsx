@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Button } from '../../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { apiClient } from '../../lib/api'
 import { ProtectedRoute } from '../../components/ProtectedRoute'
 
-function ProjectsContent() {
+function ProjectsContent(): React.JSX.Element {
   const [searchTerm, setSearchTerm] = useState('')
   
   const { data: projects = [], isLoading, error } = useQuery({
