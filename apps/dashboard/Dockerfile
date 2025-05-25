@@ -37,24 +37,12 @@ RUN cd /app/apps/dashboard && npx next build
 # Production stage
 FROM node:18-alpine AS runner
 
-RUN npm install -g pnpm@9.15.4
-RUN apk add --no-cache python3 make g++
-
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/dashboard/package.json ./apps/dashboard/
-COPY packages/ ./packages/
-
-# Install production dependencies only
-RUN pnpm install --frozen-lockfile --prod
-
-# Copy built application
-COPY --from=base /app/apps/dashboard/.next ./apps/dashboard/.next
+# Copy the standalone build (includes all necessary dependencies)
+COPY --from=base /app/apps/dashboard/.next/standalone ./
+COPY --from=base /app/apps/dashboard/.next/static ./apps/dashboard/.next/static
 COPY --from=base /app/apps/dashboard/public ./apps/dashboard/public
-COPY --from=base /app/apps/dashboard/package.json ./apps/dashboard/
-COPY --from=base /app/packages ./packages
 
 # Create non-root user for security
 RUN addgroup -g 1001 -S nodejs
@@ -67,4 +55,4 @@ USER nextjs
 
 EXPOSE 3000
 
-CMD ["pnpm", "start:dashboard"]
+CMD ["node", "server.js"]
