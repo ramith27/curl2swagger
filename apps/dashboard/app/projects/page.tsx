@@ -133,7 +133,7 @@ function ProjectsContent(): React.JSX.Element {
   )
 }
 
-export default function ProjectsPage() {
+export default function ProjectsPage(): React.JSX.Element {
   return (
     <ProtectedRoute>
       <ProjectsContent />
