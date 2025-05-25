@@ -8,21 +8,22 @@ RUN apk add --no-cache python3 make g++
 # Set working directory
 WORKDIR /app
 
-# Copy package files for better layer caching
+# Copy all package files for proper workspace setup
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/dashboard/package.json ./apps/dashboard/
 COPY packages/ ./packages/
-
-# Install dependencies
-RUN pnpm install --frozen-lockfile
-
-# Copy source code
-COPY apps/dashboard ./apps/dashboard
 COPY turbo.json ./
 COPY tsconfig.base.json ./
 
-# Build the dashboard using workspace context (skip lint)
-RUN pnpm --filter=dashboard run build
+# Install dependencies with proper workspace linking
+RUN pnpm install --frozen-lockfile
+
+# Copy source code after dependencies are installed
+COPY apps/dashboard ./apps/dashboard
+
+# Build the dashboard directly (bypass turbo lint dependency)
+WORKDIR /app/apps/dashboard
+RUN pnpm build
 
 # Production stage
 FROM node:18-alpine AS runner
