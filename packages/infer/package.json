@@ -1,0 +1,20 @@
+{
+  "name": "@curl2swagger/infer",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "quicktype-core": "^23.0.75"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "eslint": "^8.51.0",
+    "vitest": "^0.34.6"
+  }
+}

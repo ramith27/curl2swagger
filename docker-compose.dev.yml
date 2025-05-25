@@ -54,7 +54,6 @@ services:
         condition: service_healthy
     volumes:
       - ./apps/backend:/app/apps/backend
-      - ./packages:/app/packages
       - /app/node_modules
       - /app/apps/backend/node_modules
     working_dir: /app/apps/backend
@@ -64,9 +63,6 @@ services:
         - action: rebuild
           path: ./apps/backend/src
           target: /app/apps/backend/src
-        - action: rebuild
-          path: ./packages
-          target: /app/packages
 
   dashboard:
     build:
@@ -84,7 +80,6 @@ services:
       - backend
     volumes:
       - ./apps/dashboard:/app/apps/dashboard
-      - ./packages:/app/packages
       - /app/node_modules
       - /app/apps/dashboard/node_modules
     working_dir: /app/apps/dashboard
@@ -94,9 +89,6 @@ services:
         - action: rebuild
           path: ./apps/dashboard
           target: /app/apps/dashboard
-        - action: rebuild
-          path: ./packages
-          target: /app/packages
 
 volumes:
   postgres_dev_data:

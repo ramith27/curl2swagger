@@ -11,7 +11,6 @@ WORKDIR /app
 # Copy all package files for proper workspace setup
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/dashboard/package.json ./apps/dashboard/
-COPY packages/ ./packages/
 COPY turbo.json ./
 COPY tsconfig.base.json ./
 

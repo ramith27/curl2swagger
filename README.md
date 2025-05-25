@@ -96,12 +96,16 @@ The application will be available at:
 ```
 curl2swagger/
 ├── apps/
-│   ├── backend/          # NestJS API server
-│   └── dashboard/        # Next.js frontend
-├── packages/
-│   ├── shared/           # Shared types and schemas
-│   ├── parser/           # cURL parsing utilities
-│   └── infer/            # Schema inference tools
+│   ├── backend/          # NestJS API server with integrated utilities
+│   │   ├── src/
+│   │   │   ├── shared/   # Internal parser, inference & schema utilities
+│   │   │   ├── auth/     # Authentication module
+│   │   │   ├── capture/  # cURL capture handling
+│   │   │   ├── project/  # Project management
+│   │   │   ├── spec/     # OpenAPI specification generation
+│   │   │   └── quality/  # API quality analysis
+│   │   └── prisma/       # Database schema and migrations
+│   └── dashboard/        # Next.js frontend application
 ├── infra/
 │   └── docker-compose.yml # Infrastructure services
 ├── .github/
@@ -121,7 +125,7 @@ curl2swagger/
 2. **Make your changes**
    - Backend changes go in `apps/backend/`
    - Frontend changes go in `apps/dashboard/`
-   - Shared utilities go in `packages/`
+   - Shared utilities are now integrated within `apps/backend/src/shared/`
 
 3. **Test your changes**
    ```bash

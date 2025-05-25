@@ -19,7 +19,6 @@ WORKDIR /app
 # Copy package files for better layer caching
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/backend/package.json ./apps/backend/
-COPY packages/ ./packages/
 
 # Copy Prisma schema before installing dependencies
 COPY apps/backend/prisma ./apps/backend/prisma/
@@ -38,22 +37,11 @@ COPY apps/backend/tsconfig.json ./apps/backend/
 COPY apps/backend/nest-cli.json ./apps/backend/
 COPY apps/backend/.eslintrc.cjs ./apps/backend/
 
-# Copy package source files and configs
-COPY packages/shared/src ./packages/shared/src
-COPY packages/shared/tsconfig.json ./packages/shared/
-COPY packages/shared/.eslintrc.cjs ./packages/shared/
-COPY packages/parser/src ./packages/parser/src
-COPY packages/parser/tsconfig.json ./packages/parser/
-COPY packages/parser/.eslintrc.cjs ./packages/parser/
-COPY packages/infer/src ./packages/infer/src
-COPY packages/infer/tsconfig.json ./packages/infer/
-COPY packages/infer/.eslintrc.cjs ./packages/infer/
-
 # Generate Prisma client
 RUN cd apps/backend && pnpm exec prisma generate
 
-# Build packages and backend using Turbo (handles dependencies automatically)
-RUN pnpm run build:backend
+# Build backend
+RUN cd apps/backend && pnpm run build
 
 # Production stage
 FROM node:18-slim AS production
@@ -68,14 +56,13 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g pnpm@9.15.4 turbo
+RUN npm install -g pnpm@9.15.4
 
 WORKDIR /app
 
 # Copy package files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/backend/package.json ./apps/backend/
-COPY packages/ ./packages/
 
 # Copy Prisma schema before installing dependencies
 COPY apps/backend/prisma ./apps/backend/prisma/
@@ -86,7 +73,6 @@ RUN pnpm install --frozen-lockfile --prod
 # Copy built application
 COPY --from=base /app/apps/backend/dist ./apps/backend/dist
 COPY --from=base /app/apps/backend/prisma ./apps/backend/prisma
-COPY --from=base /app/packages ./packages
 COPY --from=base /app/tsconfig.base.json ./
 
 # Copy start script
