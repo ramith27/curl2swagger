@@ -1,8 +1,9 @@
 # Dashboard Dockerfile
 FROM node:18-alpine AS base
 
-# Install pnpm
+# Install pnpm and build tools for tree-sitter
 RUN npm install -g pnpm@9.15.4
+RUN apk add --no-cache python3 make g++
 
 # Set working directory
 WORKDIR /app
@@ -27,6 +28,7 @@ RUN pnpm build:dashboard
 FROM node:18-alpine AS runner
 
 RUN npm install -g pnpm@9.15.4
+RUN apk add --no-cache python3 make g++
 
 WORKDIR /app
 
