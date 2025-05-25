@@ -17,13 +17,14 @@ RUN pnpm install --frozen-lockfile
 
 # Copy source code
 COPY apps/dashboard ./apps/dashboard
+COPY turbo.json ./
 COPY tsconfig.base.json ./
 
-# Build the dashboard
-RUN cd apps/dashboard && pnpm run build
+# Build the dashboard using workspace context
+RUN pnpm build:dashboard
 
 # Production stage
-FROM node:18-alpine AS production
+FROM node:18-alpine AS runner
 
 RUN npm install -g pnpm@9.15.4
 
@@ -52,6 +53,6 @@ RUN chown -R nextjs:nodejs /app
 
 USER nextjs
 
-EXPOSE 3002
+EXPOSE 3000
 
-CMD ["pnpm", "run", "start", "--filter=dashboard"]
+CMD ["pnpm", "start:dashboard"]
