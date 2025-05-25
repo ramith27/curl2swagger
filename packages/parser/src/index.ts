@@ -14,10 +14,10 @@ export interface ParsedCurl {
 }
 
 export class CurlParser {
-  static parse(rawCurl: string): ParsedCurl {
+  static async parse(rawCurl: string): Promise<ParsedCurl> {
     try {
-      // Use require to load curlconverter for CommonJS compatibility
-      const curlconverter = require('curlconverter');
+      // Use dynamic import to load curlconverter ES module
+      const curlconverter = await import('curlconverter');
       
       // Use curlconverter to parse the cURL command
       const jsonString = curlconverter.toJsonString(rawCurl);
@@ -76,9 +76,9 @@ export class CurlParser {
     return params;
   }
 
-  static validateCurl(rawCurl: string): boolean {
+  static async validateCurl(rawCurl: string): Promise<boolean> {
     try {
-      this.parse(rawCurl);
+      await this.parse(rawCurl);
       return true;
     } catch {
       return false;

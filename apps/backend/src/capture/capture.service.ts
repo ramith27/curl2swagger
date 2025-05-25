@@ -8,7 +8,7 @@ export class CaptureService {
 
   async parseCurl(rawCurl: string, projectId?: string) {
     try {
-      const parsed = CurlParser.parse(rawCurl);
+      const parsed = await CurlParser.parse(rawCurl);
       
       if (!parsed) {
         throw new Error('Failed to parse cURL command');
