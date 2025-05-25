@@ -59,6 +59,10 @@ COPY --from=base /app/apps/backend/dist ./apps/backend/dist
 COPY --from=base /app/apps/backend/prisma ./apps/backend/prisma
 COPY --from=base /app/packages ./packages
 
+# Copy start script
+COPY apps/backend/start.sh ./apps/backend/start.sh
+RUN chmod +x ./apps/backend/start.sh
+
 # Generate Prisma client for production
 RUN cd apps/backend && pnpm exec prisma generate
 
@@ -73,4 +77,6 @@ USER nest
 
 EXPOSE 3003
 
-CMD ["node", "apps/backend/dist/main.js"]
+WORKDIR /app/apps/backend
+
+CMD ["./start.sh"]
