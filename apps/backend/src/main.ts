@@ -10,7 +10,7 @@ async function bootstrap() {
   const allowedOrigins = [
     'http://localhost:3000',
     'http://localhost:3002', 
-    'https://crul2swagger-api.we4u.pw',
+    'https://crul2swagger.we4u.pw',
     process.env.FRONTEND_URL
   ].filter(Boolean);
 
