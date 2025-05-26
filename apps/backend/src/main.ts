@@ -9,8 +9,9 @@ async function bootstrap() {
   // Enable CORS with dynamic origin support
   const allowedOrigins = [
     'http://localhost:3000',
-    'http://localhost:3002', 
+    'http://localhost:3002',
     'https://crul2swagger.we4u.pw',
+    'https://crul2swagger-api.we4u.pw',
     process.env.FRONTEND_URL
   ].filter(Boolean);
 
@@ -21,13 +22,16 @@ async function bootstrap() {
       
       // Check if origin is in allowed list or matches localhost/192.168 pattern
       if (allowedOrigins.includes(origin) || 
-          origin.match(/^http:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+):(3000|3002)$/)) {
+          origin.match(/^https?:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+):(3000|3002)$/)) {
         return callback(null, true);
       }
       
       return callback(new Error('Not allowed by CORS'));
     },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
   });
 
   // Global validation pipe
