@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://192.168.3.72:3003'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://crul2swagger-api.we4u.pw'
 
 // Auth interfaces
 export interface LoginRequest {
